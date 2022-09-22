@@ -27,7 +27,12 @@ app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "public")));
 
 app.use("/", require("./routes/root"));
-app.use("/users", require("./routes/usersRoute"));
+app.use("/auth", require("./routes/authRoutes"));
+app.use("/users", require("./routes/userRoutes"));
+app.use("/payreqs", require("./routes/payreqRoutes"));
+app.use("/projects", require("./routes/projectRoutes"));
+app.use("/employees", require("./routes/employeeRoutes"));
+app.use("/departments", require("./routes/departmentRoutes"));
 
 app.all("*", (req, res) => {
   res.status(404);
