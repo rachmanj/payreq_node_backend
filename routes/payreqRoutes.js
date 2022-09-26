@@ -1,16 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const payreqsController = require("../controllers/payreqsController");
+const approvedController = require("../controllers/approvedController");
+const outgoingsController = require("../controllers/outgoingsController");
 
 router
   .route("/")
-  .get(payreqsController.getAllPayreqs)
-  .post(payreqsController.createPayreq)
-  .patch(payreqsController.updatePayreq)
-  .delete(payreqsController.deletePayreq);
+  .get(approvedController.getAllPayreqs)
+  .post(approvedController.createPayreq)
+  .patch(approvedController.updatePayreq)
+  .delete(approvedController.deletePayreq);
 
-router.route("/outgoing").patch(payreqsController.addOutgoing);
+router
+  .route("/outgoings")
+  .get(outgoingsController.getAllOutgoings)
+  .patch(outgoingsController.addOutgoing);
 
-router.route("/realization").patch(payreqsController.addRealization);
+// router.route("/realization").patch(payreqsController.addRealization);
 
 module.exports = router;

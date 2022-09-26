@@ -17,7 +17,7 @@ const payreqSchema = new mongoose.Schema(
     employeeId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Employee",
+      ref: "User",
     },
     priority: {
       type: Number,
@@ -44,6 +44,10 @@ const payreqSchema = new mongoose.Schema(
         },
       },
     ],
+    outgoingTotal: {
+      type: Number,
+      default: 0,
+    },
     realization: {
       realizationNo: {
         type: String,

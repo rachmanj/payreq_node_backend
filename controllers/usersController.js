@@ -20,20 +20,28 @@ const getAllUsers = async (req, res) => {
 // @route  POST /users
 // @access Private
 const createUser = async (req, res) => {
-  const { name, username, password, project, roles } = req.body;
+  const { name, username, password, projectId, roles, nik, departmentId } =
+    req.body;
 
   // confirm data
-  if (!name || !username || !password || !project) {
+  if (!name || !username || !password || !projectId) {
     return res.status(400).json({ message: "Please enter all fields" });
   }
 
   // check for duplicate username
-  const duplicate = await User.findOne({ username }).lean().exec();
+  const duplicateUsername = await User.findOne({ username }).lean().exec();
 
-  if (duplicate) {
+  if (duplicateUsername) {
     return res
       .status(400)
       .json({ message: `Username ${username} already exist` });
+  }
+
+  // check for duplicate nik
+  const duplicateNik = await User.findOne({ nik }).lean().exec();
+
+  if (duplicateNik) {
+    return res.status(400).json({ message: `NIK ${nik} already exist` });
   }
 
   // hash password
@@ -41,8 +49,16 @@ const createUser = async (req, res) => {
 
   const userObject =
     !Array.isArray(roles) || !roles.length
-      ? { name, username, password: hashedPwd, project }
-      : { name, username, password: hashedPwd, project, roles };
+      ? { name, username, password: hashedPwd, projectId, nik, departmentId }
+      : {
+          name,
+          username,
+          password: hashedPwd,
+          projectId,
+          nik,
+          departmentId,
+          roles,
+        };
 
   // create new user
   const user = await User.create(userObject);
@@ -59,14 +75,23 @@ const createUser = async (req, res) => {
 // @route  PATCH /users
 // @access Private
 const updateUser = async (req, res) => {
-  const { id, name, username, password, project, roles, active } = req.body;
+  const {
+    id,
+    name,
+    username,
+    password,
+    projectId,
+    roles,
+    active,
+    nik,
+    departmentId,
+  } = req.body;
 
   // confirm data
   if (
     !id ||
     !name ||
     !username ||
-    !project ||
     !Array.isArray(roles) ||
     !roles.length ||
     typeof active !== "boolean"
@@ -82,17 +107,26 @@ const updateUser = async (req, res) => {
   }
 
   // check for duplicate username
-  const duplicate = await User.findOne({ username }).lean().exec();
+  const duplicateUsername = await User.findOne({ username }).lean().exec();
 
-  if (duplicate && duplicate?._id.toString() !== id) {
+  if (duplicateUsername && duplicateUsername?._id.toString() !== id) {
     return res.status(409).json({ message: "Username already exists" });
+  }
+
+  // check for duplicate nik
+  const duplicateNik = await User.findOne({ nik }).lean().exec();
+
+  if (duplicateNik && duplicateNik?._id.toString() !== id) {
+    return res.status(409).json({ message: "NIK already exists" });
   }
 
   user.name = name;
   user.username = username;
-  user.roles = roles;
-  user.project = project;
+  user.nik = nik;
+  user.projectId = projectId;
+  user.departmentId = departmentId;
   user.active = active;
+  user.roles = roles;
 
   // hash password
   if (password) {

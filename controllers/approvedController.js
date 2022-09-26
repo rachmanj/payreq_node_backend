@@ -117,45 +117,6 @@ const deletePayreq = async (req, res) => {
   }
 };
 
-// @desc    add Outgoing tx
-// @route   POST /payreqs/outgoing
-// @access  Private
-const addOutgoing = async (req, res) => {
-  const { id, date, amount, outgoingBy } = req.body;
-
-  // get payreq from the database
-  const payreq = await Payreq.findById(id).lean();
-
-  // if no payreq found, return 400
-  if (!payreq) {
-    return res.status(400).json({ message: "Payreq not found" });
-  }
-
-  // add outgoing tx
-  const updatedPayreq = await Payreq.findByIdAndUpdate(
-    id,
-    {
-      $push: {
-        outgoing: {
-          date,
-          amount,
-          outgoingBy,
-        },
-      },
-    },
-    { new: true }
-  );
-
-  // respon
-  if (updatedPayreq) {
-    res.status(201).json({
-      message: `Outgoing tx added to payreq ${updatedPayreq.payreqNo}`,
-    });
-  } else {
-    res.status(400).json({ message: "Error adding outgoing tx" });
-  }
-};
-
 // @desc    add Realization tx
 // @route   POST /payreqs/realization
 // @access  Private
@@ -201,6 +162,5 @@ module.exports = {
   createPayreq,
   updatePayreq,
   deletePayreq,
-  addOutgoing,
   addRealization,
 };
