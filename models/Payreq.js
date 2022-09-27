@@ -14,7 +14,7 @@ const payreqSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    employeeId: {
+    payee: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",

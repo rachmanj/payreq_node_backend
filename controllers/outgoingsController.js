@@ -1,4 +1,5 @@
 const Payreq = require("../models/Payreq");
+const User = require("../models/User");
 
 // @desc   Get all Payreqs ready to outgoing
 // @route  GET /payreqs/outgoings
@@ -21,14 +22,27 @@ const getAllOutgoings = async (req, res) => {
       .json({ message: "No payreqs ready to outgoing found" });
   }
 
-  res.json(payreqs);
+  // Payreqs with employee name
+  const payreqsWithName = await Promise.all(
+    payreqs.map(async (payreq) => {
+      const payee = await User.findById(payreq.payee).lean().exec();
+      const createdBy = await User.findById(payreq.createdBy).lean().exec();
+      return {
+        ...payreq,
+        payee: payee.name,
+        createdBy: createdBy.name,
+      };
+    })
+  );
+
+  res.json(payreqsWithName);
 };
 
 // @desc    add Outgoing tx
 // @route   POST /payreqs/outgoing
 // @access  Private
 const updateOutgoing = async (req, res) => {
-  const { id, date, amount, outgoingBy } = req.body;
+  const { id, date, amount, updatedBy } = req.body;
 
   // get payreq from the database
   const payreq = await Payreq.findById(id).exec();
@@ -61,7 +75,7 @@ const updateOutgoing = async (req, res) => {
         outgoing: {
           date,
           amount,
-          outgoingBy,
+          updatedBy,
         },
       },
     },

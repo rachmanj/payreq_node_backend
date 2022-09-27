@@ -1,4 +1,5 @@
 const Payreq = require("../models/Payreq");
+const User = require("../models/User");
 
 // @desc    Get all payreqs
 // @route   GET /payreqs
@@ -12,17 +13,30 @@ const getAllPayreqs = async (req, res) => {
     return res.status(400).json({ message: "No payreqs found" });
   }
 
-  res.json(payreqs);
+  // Payreqs with employee name
+  const payreqsWithName = await Promise.all(
+    payreqs.map(async (payreq) => {
+      const payee = await User.findById(payreq.payee).lean().exec();
+      const createdBy = await User.findById(payreq.createdBy).lean().exec();
+      return {
+        ...payreq,
+        payee: payee.name,
+        createdBy: createdBy.name,
+      };
+    })
+  );
+
+  res.json(payreqsWithName);
 };
 
 // @desc   Create a new payreq
 // @route  POST /payreqs
 // @access Private
 const createPayreq = async (req, res) => {
-  const { payreqNo, amount, employeeId } = req.body;
+  const { payreqNo, amount, payee, createdBy } = req.body;
 
   // confirm data
-  if (!payreqNo || !amount || !employeeId) {
+  if (!payreqNo || !amount || !payee) {
     return res
       .status(400)
       .json({ message: "Please enter all fields required" });

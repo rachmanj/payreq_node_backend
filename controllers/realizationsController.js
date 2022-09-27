@@ -1,4 +1,5 @@
 const Payreq = require("../models/Payreq");
+const User = require("../models/User");
 
 // @desc    Get all ready to realization payreqs
 // @route   GET /payreqs/realizations
@@ -19,7 +20,20 @@ const getAllRealizations = async (req, res) => {
     return res.status(400).json({ message: "No payreqs to realization found" });
   }
 
-  res.json(payreqs);
+  // Payreqs with employee name
+  const payreqsWithName = await Promise.all(
+    payreqs.map(async (payreq) => {
+      const payee = await User.findById(payreq.payee).lean().exec();
+      const createdBy = await User.findById(payreq.createdBy).lean().exec();
+      return {
+        ...payreq,
+        payee: payee.name,
+        createdBy: createdBy.name,
+      };
+    })
+  );
+
+  res.json(payreqsWithName);
 };
 
 // @desc    Update realization data
