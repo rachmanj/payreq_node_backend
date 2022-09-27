@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const approvedController = require("../controllers/approvedController");
 const outgoingsController = require("../controllers/outgoingsController");
+const realizationsController = require("../controllers/realizationsController");
 
 router
   .route("/")
@@ -13,8 +14,11 @@ router
 router
   .route("/outgoings")
   .get(outgoingsController.getAllOutgoings)
-  .patch(outgoingsController.addOutgoing);
+  .patch(outgoingsController.updateOutgoing);
 
-// router.route("/realization").patch(payreqsController.addRealization);
+router
+  .route("/realizations")
+  .get(realizationsController.getAllRealizations)
+  .patch(realizationsController.updateRealization);
 
 module.exports = router;

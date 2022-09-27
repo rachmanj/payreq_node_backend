@@ -1,4 +1,4 @@
-const Payreq = require("../models/payreq");
+const Payreq = require("../models/Payreq");
 
 // @desc    Get all payreqs
 // @route   GET /payreqs

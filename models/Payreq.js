@@ -37,7 +37,7 @@ const payreqSchema = new mongoose.Schema(
           type: Number,
           default: null,
         },
-        outgoingBy: {
+        updatedBy: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
           default: null,
@@ -61,7 +61,7 @@ const payreqSchema = new mongoose.Schema(
         type: Number,
         default: null,
       },
-      realizationBy: {
+      updatedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         default: null,
@@ -72,7 +72,7 @@ const payreqSchema = new mongoose.Schema(
         type: Date,
         default: null,
       },
-      by: {
+      updatedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         default: null,

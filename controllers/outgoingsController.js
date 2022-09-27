@@ -1,4 +1,4 @@
-const Payreq = require("../models/payreq");
+const Payreq = require("../models/Payreq");
 
 // @desc   Get all Payreqs ready to outgoing
 // @route  GET /payreqs/outgoings
@@ -27,7 +27,7 @@ const getAllOutgoings = async (req, res) => {
 // @desc    add Outgoing tx
 // @route   POST /payreqs/outgoing
 // @access  Private
-const addOutgoing = async (req, res) => {
+const updateOutgoing = async (req, res) => {
   const { id, date, amount, outgoingBy } = req.body;
 
   // get payreq from the database
@@ -80,5 +80,5 @@ const addOutgoing = async (req, res) => {
 
 module.exports = {
   getAllOutgoings,
-  addOutgoing,
+  updateOutgoing,
 };
