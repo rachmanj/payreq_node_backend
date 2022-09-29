@@ -52,19 +52,15 @@ const updateOutgoing = async (req, res) => {
     return res.status(400).json({ message: "Payreq not found" });
   }
 
-  // check if outgoingTotal is less than amount
-  if (payreq.outgoingTotal >= payreq.amount) {
-    return res
-      .status(401)
-      .json({ message: "Payreq already has outgoing full amount" });
+  // check if the balance is enough
+  if (payreq.outgoingTotal + amount > payreq.amount) {
+    return res.status(400).json({ message: "Outgoing amount is over" });
   }
-
-  const sumOutgoingAmount = (await payreq.outgoingTotal) + amount;
 
   // save field outgoingTotal
   await payreq.updateOne({
-    $set: {
-      outgoingTotal: sumOutgoingAmount,
+    $inc: {
+      outgoingTotal: amount,
     },
   });
 
