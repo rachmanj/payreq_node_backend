@@ -18,11 +18,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
-    projectId: {
+    project: {
       type: String,
       required: true,
     },
-    departmentId: {
+    department: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },

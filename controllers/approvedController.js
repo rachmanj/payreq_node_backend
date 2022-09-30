@@ -6,7 +6,7 @@ const User = require("../models/User");
 // @access  Private
 const getAllPayreqs = async (req, res) => {
   // Get all payreqs from the database
-  const payreqs = await Payreq.find().lean();
+  const payreqs = await Payreq.find().lean().exec();
 
   // if no payreqs found, return 400
   if (!payreqs?.length) {

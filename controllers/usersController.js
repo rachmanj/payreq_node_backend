@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const Department = require("../models/Department");
+const Project = require("../models/Project");
 const bcrypt = require("bcrypt");
 
 // @desc    Get all users
@@ -13,7 +15,22 @@ const getAllUsers = async (req, res) => {
     return res.status(400).json({ message: "No users found" });
   }
 
-  res.json(users);
+  // respon users with dept and project name
+  const usersWithDeptAndProject = await Promise.all(
+    users.map(async (user) => {
+      const department = await Department.findById(user.department)
+        .lean()
+        .exec();
+      const project = await Project.findById(user.project).lean().exec();
+      return {
+        ...user,
+        department: department?.name,
+        project: project.code,
+      };
+    })
+  );
+
+  res.json(usersWithDeptAndProject);
 };
 
 // @desc   Create a new user
