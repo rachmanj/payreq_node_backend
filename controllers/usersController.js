@@ -37,11 +37,11 @@ const getAllUsers = async (req, res) => {
 // @route  POST /users
 // @access Private
 const createUser = async (req, res) => {
-  const { name, username, password, projectId, roles, nik, departmentId } =
+  const { fullname, username, password, projectId, roles, nik, departmentId } =
     req.body;
 
   // confirm data
-  if (!name || !username || !password || !projectId) {
+  if (!fullname || !username || !password || !projectId) {
     return res.status(400).json({ message: "Please enter all fields" });
   }
 
@@ -66,9 +66,16 @@ const createUser = async (req, res) => {
 
   const userObject =
     !Array.isArray(roles) || !roles.length
-      ? { name, username, password: hashedPwd, projectId, nik, departmentId }
+      ? {
+          fullname,
+          username,
+          password: hashedPwd,
+          projectId,
+          nik,
+          departmentId,
+        }
       : {
-          name,
+          fullname,
           username,
           password: hashedPwd,
           projectId,
@@ -82,7 +89,7 @@ const createUser = async (req, res) => {
 
   // respon
   if (user) {
-    res.status(201).json({ message: `User ${user.name} created` });
+    res.status(201).json({ message: `User ${user.fullname} created` });
   } else {
     res.status(400).json({ message: "Error creating user" });
   }
@@ -94,7 +101,7 @@ const createUser = async (req, res) => {
 const updateUser = async (req, res) => {
   const {
     id,
-    name,
+    fullname,
     username,
     password,
     projectId,
@@ -107,7 +114,7 @@ const updateUser = async (req, res) => {
   // confirm data
   if (
     !id ||
-    !name ||
+    !fullname ||
     !username ||
     !Array.isArray(roles) ||
     !roles.length ||
@@ -137,11 +144,11 @@ const updateUser = async (req, res) => {
     return res.status(409).json({ message: "NIK already exists" });
   }
 
-  user.name = name;
+  user.fullname = fullname;
   user.username = username;
   user.nik = nik;
-  user.projectId = projectId;
-  user.departmentId = departmentId;
+  user.project = projectId;
+  user.department = departmentId;
   user.active = active;
   user.roles = roles;
 

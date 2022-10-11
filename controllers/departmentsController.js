@@ -44,7 +44,7 @@ const createDepartment = async (req, res) => {
 
   // respon
   if (department) {
-    res.status(201).json({ message: `Department ${department.name} created` });
+    res.status(200).json({ message: `Department ${department.name} created` });
   } else {
     res.status(400).json({ message: "Error creating department" });
   }
@@ -79,7 +79,7 @@ const updateDepartment = async (req, res) => {
 
   // respon
   if (department) {
-    res.status(201).json({ message: `Department ${department.name} updated` });
+    res.status(200).json({ message: `Department ${department.name} updated` });
   } else {
     res.status(400).json({ message: "Error updating department" });
   }
